@@ -147,8 +147,19 @@ int fnCE103HW2Lib(unsigned char* fia, int fib, char* fic)
 int ce103_fibonacciNumber(int fiIndex)
 {
 	//TODO:Start from Here...
-	return -1;
+	int first = 0, second = 1, third;
+	for (int i = 1; i < fiIndex; i++)
+	{
+		third = first + second;
+		first = second;
+		second = third;
+	}
+	return first;
 }
+/*      the i value is incremented from 0 to fiIndex.
+        the third value is the sum of first and second.
+        the first value is equal to the second.
+        the second value is equal to the third. */
 
 /**
 	@name   strrev (ce103_strrev)
@@ -164,8 +175,28 @@ int ce103_fibonacciNumber(int fiIndex)
 char* ce103_strrev(char* fiStr)
 {
 	//TODO:Start from Here...
-	return 0;
+	char ch;
+	char* p = fiStr;
+	char* q = fiStr;
+
+	for (; *q != '\0'; q++);
+	;
+	q--;
+	for (; p < q; p++, q--) {
+		ch = *p;
+		*p = *q;
+		*q = ch;
+	}
+	return fiStr;
 }
+	/*  we have created an empty string named ch.
+        the values of p and q are equal to the given fiStr.
+        we increase the q value so that the q value is not empty.
+        as long as the value of p is less than the value of q, p+1 gets the value of q-1.
+        if ch is equal to the value of p, then p is equal to the value of q, and q is equal to ch again.
+        The fiStr that was given at the beginning is returned in its new form. (An entire word is displaced from beginning to end.)
+        For example; ABCDEFGH - HGFEDCBA*/
+
 
 /**
 	@name   strlen (ce103_strlen)
@@ -189,8 +220,21 @@ char* ce103_strrev(char* fiStr)
 int ce103_strlen(const char* fiStr)
 {
 	//TODO:Start from Here...
-	return -1;
+
+	int i = 0;
+	char* ptr = fiStr;
+	while (*ptr != '\0')
+	{
+		++i;
+		++ptr;
+	}
+	return i;
+
 }
+/*      if i = 0, then,
+        we equate the ptr value to the FISTR given to us.
+        we increase i and increase the number of characters so that ptr is not empty.
+		the  i returns as the number of characters in the word given to us.*/
 
 /**
 	@name   strcat (ce103_strcat)
@@ -215,8 +259,20 @@ int ce103_strlen(const char* fiStr)
 char* ce103_strcat(char* fiDest, char* fiSrc)
 {
 	//TODO:Start from Here...
-	return 0;
+	char* cp = fiDest;
+
+	while (*cp)
+
+		cp++;
+
+	while (*cp++ = *fiSrc++);
+
+	return(fiDest);
 }
+/*      we equated the cp value to the fiDest given to us.
+        as long as there is a cp value, we increase the cp value and increase the cp and fiScr.
+        In this way, the first string and the second string (fiDest) are copied.*/
+	
 
 /**
 	@name   strcmp (ce103_strcmp)
@@ -242,8 +298,17 @@ char* ce103_strcat(char* fiDest, char* fiSrc)
 int ce103_strcmp(const char* fiLhs, const char* fiRhs)
 {
 	//TODO:Start from Here...
-	return -2;
+
+	while (fiLhs && (fiLhs == *fiRhs)) {
+		fiLhs++;
+		fiRhs++;
+	}
+	return *fiLhs - *fiRhs;
 }
+/*      As long as there are fiLhs, and as long as fiLhs characters are equal to fiRhs,
+        so if the words are the same as each other, we increase them both. (returns 1.)
+        On the way back, the fiLhs are taken out of the fiRhs. (returns 0 - 0 = 0.) The words are not the same.*/
+
 
 /**
 *
@@ -268,9 +333,13 @@ int ce103_strcmp(const char* fiLhs, const char* fiRhs)
 char* ce103_strcpy(char* foDestination, const char* fiSource)
 {
 	//TODO:Start from Here...
-	return 0;
+	char* ret = foDestination;
+	while ((*foDestination++ = *fiSource++) != '\0');
+	return ret;
 }
-
+/*      we have equated the variable p to foDestination.
+        If the fiSource value is given, the foDestination is synchronized to all characters of the fiSource.
+        As a result, foDestination will return exactly the same as fiSource as a string.*/
 /**
  * @name    hex2bin (ce103_hex2bin)
  * @brief   \b Hexadecimal to Binary (BCD)  Conversion
@@ -287,7 +356,25 @@ char* ce103_strcpy(char* foDestination, const char* fiSource)
 void ce103_hex2bin(char* fiHex, int fiHexLen, unsigned char* foBin)
 {
 	//TODO:Start from Here...
+	int c, d;
+	for (;;) {
+		c = *fiHex++; if (c == 0) break;
+		if (c > 96) c -= 87;
+		else if (c > 64) c -= 55;
+		else c -= 48;
+		d = *fiHex++; if (d == 0) { *foBin = c << 4; break; }
+		if (d > 96) d -= 87;
+		else if (d > 64) d -= 55;
+		else d -= 48;
+		*foBin++ = (c << 4) | d;
+	}
+	return fiHex;
 }
+/*    you will be given 16 letters/numbers/numbers/characters.
+      You will group them into 2 groups. And it will be added to their heads (0x).
+      For example: The value for "ABCDEFGH" should be: 0xAB, 0xCD, 0xDE.
+      We tested it the easy way by repeating the value of 13 in 1 and adding 0x per.
+      In Test 2, we also did a letter check and solved it a long way.*/
 
 /**
 * @name    bin2hex (ce103_bin2hex)
@@ -303,4 +390,18 @@ void ce103_hex2bin(char* fiHex, int fiHexLen, unsigned char* foBin)
 void ce103_bin2hex(unsigned char* fiBin, int fiBinLen, char* foHex)
 {
 	//TODO:Start from Here...
+	int c, d, * end = fiBin + fiBinLen;
+	while (fiBin < end) {
+		c = *(fiBin++);
+		d = c >> 4;
+		*(foHex++) = d + (d > 9 ? 55 : 48);
+		d = c & 15;
+		*(foHex++) = d + (d > 9 ? 55 : 48);
+	}
+	*foHex = 0;
+	return fiBin;
 }
+/*      It will extract numbers from the given array.
+        For example: we will take 0x12 from the string and use it as += 12 in a string.
+        The value it returns must be a combination of all these given numbers in a string.
+        returns (0x12, 0x34) --> (1234).*/
